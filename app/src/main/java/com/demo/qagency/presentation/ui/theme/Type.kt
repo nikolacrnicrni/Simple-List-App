@@ -1,4 +1,4 @@
-package com.demo.qagency.ui.theme
+package com.demo.qagency.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.demo.qagency.ui.theme
+package com.demo.qagency.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
