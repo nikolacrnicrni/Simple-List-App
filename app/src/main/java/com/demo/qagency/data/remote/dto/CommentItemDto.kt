@@ -1,7 +1,10 @@
 package com.demo.qagency.data.remote.dto
 
 
+import com.demo.qagency.domain.models.Comment
 import com.google.gson.annotations.SerializedName
+import java.text.SimpleDateFormat
+import java.util.*
 
 data class CommentItemDto(
     @SerializedName("body")
@@ -14,4 +17,14 @@ data class CommentItemDto(
     val name: String,
     @SerializedName("postId")
     val postId: Int
-)
+) {
+    fun toComment(): Comment {
+        return Comment(
+            body = body,
+            email = email,
+            id = id,
+            name = name,
+            postId = postId
+        )
+    }
+}
