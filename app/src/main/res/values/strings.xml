@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">QAgency</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="comment">Comment</string>
+    <string name="error_couldnt_reach_server">cant_reach_server</string>
+    <string name="oops_something_went_wrong">something_wrong</string>
 </resources>

@@ -3,8 +3,6 @@ package com.demo.qagency.data.remote.dto
 
 import com.demo.qagency.domain.models.Comment
 import com.google.gson.annotations.SerializedName
-import java.text.SimpleDateFormat
-import java.util.*
 
 data class CommentItemDto(
     @SerializedName("body")
