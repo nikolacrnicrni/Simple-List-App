@@ -2,13 +2,14 @@ package com.demo.qagency.presentation
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.demo.qagency.domain.models.Comment
+import com.demo.qagency.domain.states.StandardCommentState
 import com.demo.qagency.domain.use_case.GetCommentsUseCase
 import com.demo.qagency.presentation.util.UiEvent
 import com.demo.qagency.util.DefaultPaginator
-import com.demo.qagency.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CommentViewModel @Inject constructor(
         private val getComments: GetCommentsUseCase,
+        savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _pagingState = mutableStateOf<PagingState<Comment>>(PagingState())
@@ -25,6 +27,9 @@ class CommentViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private val _commentState = mutableStateOf(StandardCommentState())
+    val commentState: State<StandardCommentState> = _commentState
 
     private val paginator = DefaultPaginator(
             onLoadUpdated = { isLoading ->
@@ -48,6 +53,30 @@ class CommentViewModel @Inject constructor(
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText))
             }
     )
+
+    fun onSelectComment(comment: Comment)
+    {
+        viewModelScope.launch {
+            _commentState.value = commentState.value.copy(
+                comment = comment
+            )
+        }
+    }
+
+    fun onEvent(event: CommentEvent) {
+        when (event) {
+            CommentEvent.ShowLogoutDialog -> {
+                _pagingState.value = pagingState.value.copy(
+                    isDialogVisible = true
+                )
+            }
+            is CommentEvent.DismissLogoutDialog -> {
+                _pagingState.value = pagingState.value.copy(
+                    isDialogVisible = false
+                )
+            }
+        }
+    }
 
     init {
         loadNextPosts()

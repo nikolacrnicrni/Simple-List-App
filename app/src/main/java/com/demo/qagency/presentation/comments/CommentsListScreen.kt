@@ -11,15 +11,16 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.demo.qagency.R
+import com.demo.qagency.domain.models.Comment
+import com.demo.qagency.presentation.CommentEvent
 import com.demo.qagency.presentation.CommentViewModel
 import com.demo.qagency.presentation.comments.components.CommentItem
 import com.demo.qagency.presentation.ui.theme.MarginSizeSmall
@@ -57,13 +58,12 @@ fun CommentsListScreen(
 
     Box(modifier = Modifier.fillMaxSize())
     {
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(MarginSizeSmall)
         ) {
-            Text(text = stringResource(R.string.app_name), style = MaterialTheme.typography.h3 )
+            Text(text = stringResource(R.string.app_name), style = MaterialTheme.typography.h3)
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -76,10 +76,10 @@ fun CommentsListScreen(
                     }
                     CommentItem(
                         comment = comment,
-                        onCommentClick = {
-
-                        },
-                    )
+                    ) {
+                        viewModel.onSelectComment(comment)
+                        viewModel.onEvent(CommentEvent.ShowLogoutDialog)
+                    }
 
                     Spacer(modifier = Modifier.height(SpaceSmall))
                 }
@@ -91,6 +91,32 @@ fun CommentsListScreen(
             )
         }
 
-    }
+        if (pagingState.isDialogVisible) {
+            Dialog(onDismissRequest = { viewModel.onEvent(CommentEvent.DismissLogoutDialog) }) {
+                Column(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colors.surface,
+                            shape = MaterialTheme.shapes.medium
+                        )
+                        .padding(SpaceMedium)
+                ) {
+                    Text(text = viewModel.commentState.value.comment?.body.toString())
+                    Spacer(modifier = Modifier.height(SpaceMedium))
+                    Text(
+                        text = viewModel.commentState.value.comment?.name.toString(),
+                        color = MaterialTheme.colors.onBackground,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(SpaceMedium))
+                    Text(
+                        text = viewModel.commentState.value.comment?.email.toString(),
+                        color = MaterialTheme.colors.primary,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
+        }
 
+    }
 }
