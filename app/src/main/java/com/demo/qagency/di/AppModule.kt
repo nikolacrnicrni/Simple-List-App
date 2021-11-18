@@ -1,5 +1,6 @@
 package com.demo.qagency.di
 
+import android.content.SharedPreferences
 import com.demo.qagency.data.remote.CommentsApi
 import com.demo.qagency.data.repository.CommentImpl
 import com.demo.qagency.domain.repository.CommentsRepository
@@ -10,6 +11,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -20,10 +22,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCommentApi(client: OkHttpClient): CommentsApi {
+    fun provideCommentApi(): CommentsApi {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
-            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(CommentsApi::class.java)

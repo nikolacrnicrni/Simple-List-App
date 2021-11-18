@@ -17,18 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CommentViewModel @Inject constructor(
-        private val getActivities: GetCommentsUseCase,
+        private val getComments: GetCommentsUseCase,
 ) : ViewModel() {
-
-    init {
-        loadNextPosts()
-    }
-
-    fun loadNextPosts() {
-        viewModelScope.launch {
-            paginator.loadNextItems()
-        }
-    }
 
     private val _pagingState = mutableStateOf<PagingState<Comment>>(PagingState())
     val pagingState: State<PagingState<Comment>> = _pagingState
@@ -43,7 +33,7 @@ class CommentViewModel @Inject constructor(
                 )
             },
             onRequest = { page ->
-                getActivities(
+                getComments(
                         page = page
                 )
             },
@@ -58,5 +48,14 @@ class CommentViewModel @Inject constructor(
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText))
             }
     )
+    init {
+        loadNextPosts()
+    }
+
+    fun loadNextPosts() {
+        viewModelScope.launch {
+            paginator.loadNextItems()
+        }
+    }
 
 }
