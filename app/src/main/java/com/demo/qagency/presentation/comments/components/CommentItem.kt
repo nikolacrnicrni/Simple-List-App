@@ -44,17 +44,17 @@ fun CommentItem(
                 TextWithImage(
                     content = comment.email,
                     imageVector = Icons.Default.Email,
-                    contentDescription = ""
+                    contentDescription = "Email"
                 )
                 TextWithImage(
                     content = comment.name,
                     imageVector = Icons.Default.ShortText,
-                    contentDescription = ""
+                    contentDescription = "Title"
                 )
                 TextWithImage(
                     content = comment.body,
                     imageVector = Icons.Default.ContentPaste,
-                    contentDescription = ""
+                    contentDescription = "Content"
                 )
             }
     }

@@ -32,7 +32,8 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize()
                 ) {
                     val navController = rememberNavController()
-                    Navigation(navController)
+                    val scaffoldState = rememberScaffoldState()
+                    Navigation(navController, scaffoldState)
                 }
             }
         }

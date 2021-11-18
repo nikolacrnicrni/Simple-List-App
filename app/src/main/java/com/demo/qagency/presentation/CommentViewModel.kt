@@ -23,7 +23,7 @@ class CommentViewModel @Inject constructor(
     private val _pagingState = mutableStateOf<PagingState<Comment>>(PagingState())
     val pagingState: State<PagingState<Comment>> = _pagingState
 
-    private val _eventFlow = MutableSharedFlow<Event>()
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     private val paginator = DefaultPaginator(
@@ -48,6 +48,7 @@ class CommentViewModel @Inject constructor(
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText))
             }
     )
+
     init {
         loadNextPosts()
     }

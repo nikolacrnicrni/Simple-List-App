@@ -2,6 +2,7 @@ package com.demo.qagency.presentation.comments.components
 
 import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -15,7 +16,8 @@ import com.demo.qagency.util.Screen
 
 @Composable
 fun Navigation(
-        navController: NavHostController,
+    navController: NavHostController,
+    scaffoldState: ScaffoldState,
 ) {
     NavHost(
             navController = navController,
@@ -27,6 +29,7 @@ fun Navigation(
         ) {
             CommentsListScreen(
                     onNavigate = navController::navigate,
+                    scaffoldState = scaffoldState
             )
         }
     }
