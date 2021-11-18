@@ -1,6 +1,10 @@
 package com.demo.qagency.di
 
+import android.app.Application
 import android.content.SharedPreferences
+import androidx.room.Room
+import com.demo.qagency.data.local.CommentDao
+import com.demo.qagency.data.local.CommentDatabase
 import com.demo.qagency.data.remote.CommentsApi
 import com.demo.qagency.data.repository.CommentImpl
 import com.demo.qagency.domain.repository.CommentsRepository
@@ -32,8 +36,16 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCommentRepository(api: CommentsApi): CommentsRepository {
-        return CommentImpl(api)
+    fun provideCommentRepository(api: CommentsApi, db: CommentDatabase): CommentsRepository {
+        return CommentImpl(api = api, dao = db.dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCommentsDatabase(app: Application): CommentDatabase {
+        return Room.databaseBuilder(
+            app, CommentDatabase::class.java, "qagency_db"
+        ).build()
     }
 
     @Provides
