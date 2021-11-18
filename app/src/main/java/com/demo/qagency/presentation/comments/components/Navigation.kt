@@ -28,7 +28,6 @@ fun Navigation(
                 route = Screen.CommentListScreen.route
         ) {
             CommentsListScreen(
-                    onNavigate = navController::navigate,
                     scaffoldState = scaffoldState
             )
         }

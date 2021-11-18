@@ -8,8 +8,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,17 +28,19 @@ import com.demo.qagency.presentation.ui.theme.SpaceSmall
 import com.demo.qagency.presentation.util.UiEvent
 import com.demo.qagency.presentation.util.asString
 import com.demo.qagency.util.Screen
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun CommentsListScreen(
     scaffoldState: ScaffoldState,
-    onNavigate: (String) -> Unit = {},
     viewModel: CommentViewModel = hiltViewModel()
 ) {
     val pagingState = viewModel.pagingState.value
     val lazyListState = rememberLazyListState()
-
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
@@ -53,8 +54,8 @@ fun CommentsListScreen(
                 }
             }
         }
-
     }
+
 
     Box(modifier = Modifier.fillMaxSize())
     {
@@ -64,26 +65,29 @@ fun CommentsListScreen(
                 .padding(MarginSizeSmall)
         ) {
             Text(text = stringResource(R.string.app_name), style = MaterialTheme.typography.h3)
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-                state = lazyListState
-            ) {
-                items(pagingState.items.size) { i ->
-                    val comment = pagingState.items[i]
-                    if (i >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading) {
-                        viewModel.loadNextPosts()
-                    }
-                    CommentItem(
-                        comment = comment,
-                    ) {
-                        viewModel.onSelectComment(comment)
-                        viewModel.onEvent(CommentEvent.ShowLogoutDialog)
-                    }
+            SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = isRefreshing), onRefresh = { viewModel.refresh() }) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = lazyListState
+                ) {
+                    items(pagingState.items.size) { i ->
+                        val comment = pagingState.items[i]
+                        if (i >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading) {
+                            viewModel.loadNextPosts()
+                        }
+                        CommentItem(
+                            comment = comment,
+                        ) {
+                            viewModel.onSelectComment(comment)
+                            viewModel.onEvent(CommentEvent.ShowLogoutDialog)
+                        }
 
-                    Spacer(modifier = Modifier.height(SpaceSmall))
+                        Spacer(modifier = Modifier.height(SpaceSmall))
+                    }
                 }
             }
+
         }
         if (pagingState.isLoading) {
             CircularProgressIndicator(
