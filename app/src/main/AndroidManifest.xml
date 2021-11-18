@@ -11,12 +11,12 @@
         android:name=".QAgencyApp"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.QAgency">
+        android:theme="@style/QAgencyTheme">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.QAgency.NoActionBar">
+            android:theme="@style/QAgencyTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

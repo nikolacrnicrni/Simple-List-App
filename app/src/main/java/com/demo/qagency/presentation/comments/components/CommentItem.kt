@@ -2,10 +2,8 @@ package com.demo.qagency.presentation.comments.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.runtime.Composable
@@ -26,22 +24,18 @@ import com.demo.qagency.presentation.ui.theme.SpaceSmall
 @Composable
 fun CommentItem(
         comment: Comment,
-        onCommentClick: () -> Unit = {},
+        onCommentClick: (Comment) -> Unit = {},
 ){
-    Box(
-            modifier = Modifier
-                    .fillMaxWidth()
+    Card(
+            shape = RoundedCornerShape(14.dp),
+            modifier = Modifier.fillMaxWidth()
     ) {
-            Column(
-                    modifier = Modifier
-                            .fillMaxWidth()
+            Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable { onCommentClick(comment) }
             ) {
-                ActionRow(
-                        username = comment.name,
-                        modifier = Modifier.fillMaxWidth(),
-                        onCommentClick = onCommentClick,
-                )
-                Spacer(modifier = androidx.compose.ui.Modifier.height(SpaceSmall))
+
+                Spacer(modifier = Modifier.height(SpaceSmall))
                 Text(
                         text = buildAnnotatedString {
                             append(comment.body)
@@ -49,65 +43,7 @@ fun CommentItem(
                         style = MaterialTheme.typography.body2,
                         overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(modifier = androidx.compose.ui.Modifier.height(SpaceMedium))
+                Spacer(modifier = Modifier.height(SpaceMedium))
             }
-    }
-}
-
-
-@Composable
-fun EngagementButtons(
-        modifier: Modifier = Modifier,
-        iconSize: Dp = 30.dp,
-        onCommentClick: () -> Unit = {},
-) {
-    Row(
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-    ) {
-        IconButton(
-                onClick = {
-                    onCommentClick()
-                },
-                modifier = Modifier.size(iconSize)
-        ) {
-            Icon(
-                    imageVector = Icons.Filled.Comment,
-                    contentDescription = stringResource(id = R.string.comment)
-            )
-        }
-    }
-}
-
-@Composable
-fun ActionRow(
-        modifier: Modifier = Modifier,
-        isLiked: Boolean = false,
-        onLikeClick: () -> Unit = {},
-        onCommentClick: () -> Unit = {},
-        onShareClick: () -> Unit = {},
-        username: String,
-        onUsernameClick: () -> Unit = {}
-) {
-    Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier,
-    ) {
-        Text(
-                text = username,
-                style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.primary
-                ),
-                modifier = Modifier
-                        .clickable {
-                            onUsernameClick()
-                        }
-        )
-        EngagementButtons(
-                onCommentClick = onCommentClick
-        )
     }
 }
