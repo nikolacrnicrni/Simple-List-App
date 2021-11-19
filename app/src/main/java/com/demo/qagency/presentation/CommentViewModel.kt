@@ -40,9 +40,7 @@ class CommentViewModel @Inject constructor(
                 )
             },
             onRequest = { page ->
-                getComments(
-                        page = page
-                )
+                getComments(page = page)
             },
             onSuccess = { posts ->
                 _pagingState.value = pagingState.value.copy(
@@ -53,7 +51,8 @@ class CommentViewModel @Inject constructor(
             },
             onError = { uiText ->
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText))
-            }
+            },
+            onScope = viewModelScope
     )
 
     fun onSelectComment(comment: Comment)

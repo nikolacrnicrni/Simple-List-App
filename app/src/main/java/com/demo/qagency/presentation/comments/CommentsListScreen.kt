@@ -4,10 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,70 +54,74 @@ fun CommentsListScreen(
     }
 
 
-    Box(modifier = Modifier.fillMaxSize())
-    {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MarginSizeSmall)
-        ) {
-            Text(text = stringResource(R.string.app_name), style = MaterialTheme.typography.h3)
-            SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = isRefreshing), onRefresh = { viewModel.refresh() }) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    state = lazyListState
-                ) {
-                    items(pagingState.items.size) { i ->
-                        val comment = pagingState.items[i]
-                        if (i >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading) {
-                            viewModel.loadNextPosts()
-                        }
-                        CommentItem(
-                            comment = comment,
-                        ) {
-                            viewModel.onSelectComment(comment)
-                            viewModel.onEvent(CommentEvent.ShowLogoutDialog)
-                        }
+    Scaffold(
+        scaffoldState = rememberScaffoldState(snackbarHostState = scaffoldState.snackbarHostState)) {
 
-                        Spacer(modifier = Modifier.height(SpaceSmall))
+        Box(modifier = Modifier.fillMaxSize())
+        {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MarginSizeSmall)
+            ) {
+                Text(text = stringResource(R.string.app_name), style = MaterialTheme.typography.h3)
+                SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = isRefreshing), onRefresh = { viewModel.refresh() }) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        state = lazyListState
+                    ) {
+                        items(pagingState.items.size) { i ->
+                            val comment = pagingState.items[i]
+                            if (i >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading) {
+                                viewModel.loadNextPosts()
+                            }
+                            CommentItem(
+                                comment = comment,
+                            ) {
+                                viewModel.onSelectComment(comment)
+                                viewModel.onEvent(CommentEvent.ShowLogoutDialog)
+                            }
+
+                            Spacer(modifier = Modifier.height(SpaceSmall))
+                        }
+                    }
+                }
+
+            }
+            if (pagingState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(alignment = Alignment.Center)
+                )
+            }
+
+            if (pagingState.isDialogVisible) {
+                Dialog(onDismissRequest = { viewModel.onEvent(CommentEvent.DismissLogoutDialog) }) {
+                    Column(
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colors.surface,
+                                shape = MaterialTheme.shapes.medium
+                            )
+                            .padding(SpaceMedium)
+                    ) {
+                        Text(text = viewModel.commentState.value.comment?.body.toString())
+                        Spacer(modifier = Modifier.height(SpaceMedium))
+                        Text(
+                            text = viewModel.commentState.value.comment?.name.toString(),
+                            color = MaterialTheme.colors.onBackground,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.width(SpaceMedium))
+                        Text(
+                            text = viewModel.commentState.value.comment?.email.toString(),
+                            color = MaterialTheme.colors.primary,
+                            fontWeight = FontWeight.Bold,
+                        )
                     }
                 }
             }
 
         }
-        if (pagingState.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(alignment = Alignment.Center)
-            )
-        }
-
-        if (pagingState.isDialogVisible) {
-            Dialog(onDismissRequest = { viewModel.onEvent(CommentEvent.DismissLogoutDialog) }) {
-                Column(
-                    modifier = Modifier
-                        .background(
-                            color = MaterialTheme.colors.surface,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .padding(SpaceMedium)
-                ) {
-                    Text(text = viewModel.commentState.value.comment?.body.toString())
-                    Spacer(modifier = Modifier.height(SpaceMedium))
-                    Text(
-                        text = viewModel.commentState.value.comment?.name.toString(),
-                        color = MaterialTheme.colors.onBackground,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.width(SpaceMedium))
-                    Text(
-                        text = viewModel.commentState.value.comment?.email.toString(),
-                        color = MaterialTheme.colors.primary,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-            }
-        }
-
     }
 }

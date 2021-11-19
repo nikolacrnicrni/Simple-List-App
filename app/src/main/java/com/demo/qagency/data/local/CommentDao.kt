@@ -15,6 +15,6 @@ interface CommentDao {
     @Query("DELETE FROM CommentsEntity WHERE id IN(:id)")
     suspend fun deleteComments(id: List<Int>)
 
-    @Query("SELECT * FROM CommentsEntity")
-    suspend fun getComments(): List<CommentsEntity>
+    @Query("SELECT * FROM CommentsEntity LIMIT :pageSize OFFSET :pageIndex * :pageSize")
+    suspend fun getComments(pageSize: Int, pageIndex: Int): List<CommentsEntity>
 }
