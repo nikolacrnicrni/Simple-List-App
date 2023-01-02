@@ -1,7 +1,7 @@
 package com.demo.qagency.presentation
 
-import androidx.compose.runtime.*
-import androidx.lifecycle.SavedStateHandle
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.demo.qagency.domain.models.Comment
@@ -10,14 +10,14 @@ import com.demo.qagency.domain.use_case.GetCommentsUseCase
 import com.demo.qagency.presentation.util.UiEvent
 import com.demo.qagency.util.DefaultPaginator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class CommentViewModel @Inject constructor(
-        private val getComments: GetCommentsUseCase
+    private val getComments: GetCommentsUseCase
 ) : ViewModel() {
 
     private val _pagingState = mutableStateOf<PagingState<Comment>>(PagingState())
@@ -34,29 +34,28 @@ class CommentViewModel @Inject constructor(
         get() = _isRefreshing.asStateFlow()
 
     private val paginator = DefaultPaginator(
-            onLoadUpdated = { isLoading ->
-                _pagingState.value = pagingState.value.copy(
-                        isLoading = isLoading
-                )
-            },
-            onRequest = { page ->
-                getComments(page = page)
-            },
-            onSuccess = { posts ->
-                _pagingState.value = pagingState.value.copy(
-                        items = pagingState.value.items + posts,
-                        endReached = posts.isEmpty(),
-                        isLoading = false
-                )
-            },
-            onError = { uiText ->
-                _eventFlow.emit(UiEvent.ShowSnackbar(uiText))
-            },
-            onScope = viewModelScope
+        onLoadUpdated = { isLoading ->
+            _pagingState.value = pagingState.value.copy(
+                isLoading = isLoading
+            )
+        },
+        onRequest = { page ->
+            getComments(page = page)
+        },
+        onSuccess = { posts ->
+            _pagingState.value = pagingState.value.copy(
+                items = pagingState.value.items + posts,
+                endReached = posts.isEmpty(),
+                isLoading = false
+            )
+        },
+        onError = { uiText ->
+            _eventFlow.emit(UiEvent.ShowSnackbar(uiText))
+        },
+        onScope = viewModelScope
     )
 
-    fun onSelectComment(comment: Comment)
-    {
+    fun onSelectComment(comment: Comment) {
         viewModelScope.launch {
             _commentState.value = commentState.value.copy(
                 comment = comment
@@ -96,5 +95,4 @@ class CommentViewModel @Inject constructor(
             paginator.loadNextItems()
         }
     }
-
 }

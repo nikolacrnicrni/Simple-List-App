@@ -1,8 +1,6 @@
 package com.demo.qagency.data.remote.dto
 
-
 import com.demo.qagency.data.local.entity.CommentsEntity
-import com.demo.qagency.domain.models.Comment
 import com.google.gson.annotations.SerializedName
 
 data class CommentItemDto(

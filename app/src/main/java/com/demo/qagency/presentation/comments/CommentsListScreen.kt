@@ -1,21 +1,23 @@
 package com.demo.qagency.presentation.comments
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.demo.qagency.R
-import com.demo.qagency.domain.models.Comment
 import com.demo.qagency.presentation.CommentEvent
 import com.demo.qagency.presentation.CommentViewModel
 import com.demo.qagency.presentation.comments.components.CommentItem
@@ -24,12 +26,11 @@ import com.demo.qagency.presentation.ui.theme.SpaceMedium
 import com.demo.qagency.presentation.ui.theme.SpaceSmall
 import com.demo.qagency.presentation.util.UiEvent
 import com.demo.qagency.presentation.util.asString
-import com.demo.qagency.util.Screen
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CommentsListScreen(
     scaffoldState: ScaffoldState,
@@ -53,12 +54,11 @@ fun CommentsListScreen(
         }
     }
 
-
     Scaffold(
-        scaffoldState = rememberScaffoldState(snackbarHostState = scaffoldState.snackbarHostState)) {
+        scaffoldState = rememberScaffoldState(snackbarHostState = scaffoldState.snackbarHostState)
+    ) {
 
-        Box(modifier = Modifier.fillMaxSize())
-        {
+        Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -87,7 +87,6 @@ fun CommentsListScreen(
                         }
                     }
                 }
-
             }
             if (pagingState.isLoading) {
                 CircularProgressIndicator(
@@ -121,7 +120,6 @@ fun CommentsListScreen(
                     }
                 }
             }
-
         }
     }
 }

@@ -1,9 +1,7 @@
 package com.demo.qagency.di
 
 import android.app.Application
-import android.content.SharedPreferences
 import androidx.room.Room
-import com.demo.qagency.data.local.CommentDao
 import com.demo.qagency.data.local.CommentDatabase
 import com.demo.qagency.data.remote.CommentsApi
 import com.demo.qagency.data.repository.CommentImpl
@@ -14,11 +12,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import javax.inject.Singleton
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)

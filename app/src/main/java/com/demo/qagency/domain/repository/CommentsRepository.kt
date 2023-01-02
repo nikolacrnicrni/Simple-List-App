@@ -8,8 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface CommentsRepository {
 
     suspend fun getPostsPaged(
-            page: Int = 0,
-            pageSize: Int = Constants.DEFAULT_PAGE_SIZE
+        page: Int = 0,
+        pageSize: Int = Constants.DEFAULT_PAGE_SIZE
     ): Flow<Resource<List<Comment>>>
-
 }

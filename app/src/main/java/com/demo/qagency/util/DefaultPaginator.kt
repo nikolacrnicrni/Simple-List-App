@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class DefaultPaginator<T>(
-        private val onLoadUpdated: (Boolean) -> Unit,
-        private val onRequest: suspend (nextPage: Int) -> Flow<Resource<List<T>>>,
-        private val onError: suspend (UiText) -> Unit,
-        private val onSuccess: (items: List<T>) -> Unit,
-        private val onScope: CoroutineScope
-): Paginator<T> {
+    private val onLoadUpdated: (Boolean) -> Unit,
+    private val onRequest: suspend (nextPage: Int) -> Flow<Resource<List<T>>>,
+    private val onError: suspend (UiText) -> Unit,
+    private val onSuccess: (items: List<T>) -> Unit,
+    private val onScope: CoroutineScope
+) : Paginator<T> {
 
     private var page = 0
 
@@ -20,7 +20,7 @@ class DefaultPaginator<T>(
         onLoadUpdated(true)
         onScope.launch {
             onRequest(page).onEach { result ->
-                when(result) {
+                when (result) {
                     is Resource.Success -> {
                         val items = result.data ?: emptyList()
                         page++
@@ -34,6 +34,5 @@ class DefaultPaginator<T>(
                 }
             }.launchIn(this)
         }
-
     }
 }

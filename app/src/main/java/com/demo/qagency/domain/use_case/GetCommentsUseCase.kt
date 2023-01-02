@@ -11,7 +11,7 @@ class GetCommentsUseCase(
 
     suspend operator fun invoke(page: Int): Flow<Resource<List<Comment>>> {
         return repository.getPostsPaged(
-                page = page
+            page = page
         )
     }
 }
